@@ -25,9 +25,9 @@ from src.constants import REPO_ROOT as ROOT, OUTPUTS_DIR
 from src.loaders import load_tribal_boundaries
 from src.sovereignty import print_data_acknowledgment, generate_citations
 with open(ROOT/"config"/"config.yaml") as stream: CONFIG = yaml.safe_load(stream)
-primary = load_tribal_boundaries(["Pine Ridge", "Rosebud"])
+primary = load_tribal_boundaries(["Pine Ridge"])
 pine_ridge = primary[primary["NAME"] == "Pine Ridge"]
-rosebud = primary[primary["NAME"] == "Rosebud"]'''
+'''
 
 
 def build_05():
@@ -75,7 +75,7 @@ else:
 
 Analytical coverage is measured against each reservation polygon. The analysis stops below the configured threshold; nearby polygons may be displayed only as explicitly labeled regional context.'''),
         nbf.v4.new_code_cell('''from src.soil_evidence import assess_coverage, require_coverage, SoilCoverageError
-reports = [assess_coverage(mapunits, boundary, name) for name, boundary in [("Pine Ridge public SSURGO", pine_ridge), ("Rosebud public SSURGO", rosebud)]]
+reports = [assess_coverage(mapunits, pine_ridge, "Pine Ridge public SSURGO")]
 display(pd.DataFrame([r.__dict__ for r in reports]))
 try:
     require_coverage(mapunits, pine_ridge, "Pine Ridge public SSURGO")

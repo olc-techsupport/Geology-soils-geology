@@ -42,7 +42,6 @@ from src.constants import (
     USGS_NWIS_SITE_URL,
     NHD_FLOWLINE_URL,
     WBD_HUC8_URL,
-    OCETI_SAKOWIN_CENSUS_NAMES,
     CENSUS_TO_COMMON,
     WSD_3D_MODEL,
     GEOLOGY_DIR,
@@ -69,14 +68,14 @@ def load_tribal_boundaries(
 
     Parameters
     nation_names  : Census NAME field values to filter.
-                    Defaults to Pine Ridge and Rosebud only.
+                    Defaults to Pine Ridge only.
     force_refresh : Re-download even if cached.
 
     Returns
     GeoDataFrame with columns: NAME, common_name, area_km2, geometry
     """
     if nation_names is None:
-        nation_names = ["Pine Ridge", "Rosebud"]
+        nation_names = ["Pine Ridge"]
 
     cache_path = CACHE_DIR / "tl_2023_us_aiannh.geojson"
 
@@ -102,14 +101,6 @@ def load_tribal_boundaries(
     gdf["common_name"] = gdf["NAME"].map(CENSUS_TO_COMMON)
     gdf["area_km2"]    = gdf.to_crs(CRS_PROJECTED).geometry.area / 1e6
     return gdf.reset_index(drop=True)
-
-
-def load_all_oceti_sakowin(force_refresh: bool = False) -> gpd.GeoDataFrame:
-    """Load boundaries for all eight Oceti Sakowin Nations."""
-    return load_tribal_boundaries(
-        nation_names=OCETI_SAKOWIN_CENSUS_NAMES,
-        force_refresh=force_refresh,
-    )
 
 
 # NHD stream network

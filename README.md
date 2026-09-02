@@ -1,7 +1,6 @@
 # Tribal Soils and Geology
 
-> **Stage 2 release candidate.** Technical hardening is in progress. Data
-> sovereignty and governance language is a draft pending OST/OLC review. Do not
+> Data sovereignty and governance language is a draft pending OST/OLC review. Do not
 > treat repository availability as publication approval for governed records or
 > derived products.
 
@@ -20,7 +19,7 @@ This repository contains workflows developed for use in support of Oglala Lakota
 ## Overview
 
 This repository provides a modular, reproducible geoscience analysis series
-for Pine Ridge and Rosebud Reservations, grounded in Tribal data sovereignty
+for the Pine Ridge Reservation and the Oglala Sioux Tribe, grounded in Tribal data sovereignty
 frameworks. It acquires and visualizes publicly available soils and geology
 data, and provides intake frameworks for Tribal-collected field data.
 
@@ -48,7 +47,7 @@ community members and Tribal decision makers after scientific and governance rev
 Spangler, L.R., 2024. DOI: [10.5066/P9LK4QHJ](https://doi.org/10.5066/P9LK4QHJ)
 
 A regional-scale volumetric 3D geologic model covering all of western South
-Dakota including Pine Ridge and Rosebud entirely. Contains 25 subsurface
+Dakota including the Pine Ridge Reservation. Contains 25 subsurface
 horizon rasters and 35 fault surfaces. Licensed CC0 (public domain).
 The stratigraphic column includes the Ogallala Group (Arikaree aquifer),
 Pierre Shale, Hell Creek Formation, Madison Group, and 20 additional units.
@@ -160,7 +159,7 @@ This repository implements the following frameworks:
 - **IEEE 2890-2025**: Recommended Practice for Provenance of Indigenous Peoples' Data
   https://standards.ieee.org/ieee/2890/10318/
 
-Federal geological surveys and soil surveys conducted on Pine Ridge and Rosebud
+Federal geological surveys and soil surveys conducted on the Pine Ridge Reservation
 describe the subsurface resources of sovereign Tribal territories. Public data
 covering these lands does not transfer authority to federal agencies or
 researchers. Tribal-collected field data is governed by OCAP® and is never

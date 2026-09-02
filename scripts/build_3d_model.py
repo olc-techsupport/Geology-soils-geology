@@ -15,7 +15,7 @@ from src.constants import WSD_3D_MODEL, ANALYSIS_CONFIG
 
 def main() -> None:
     ensure_project_directories()
-    boundaries = load_tribal_boundaries(["Pine Ridge", "Rosebud"])
+    boundaries = load_tribal_boundaries(["Pine Ridge"])
     faults = load_wsd_fault_points()
     output = OUTPUTS_DIR/"04_full_3d_geology_model.html"
     build_interactive_model(

@@ -3,11 +3,11 @@ from __future__ import annotations
 """
 sovereignty.py Data governance acknowledgment for tribal_soils_geology.
 
-Implements OCAP®, CARE, FAIR, and IEEE 2890-2025 frameworks for all
-geological and soils data describing Pine Ridge and Rosebud Reservation lands.
+Implements draft OCAP®, CARE, FAIR, and IEEE 2890-2025 framing for geological
+and soils data describing Pine Ridge Reservation lands, pending OST/OLC review.
 
 Subsurface governance note
-The geology and soils of Pine Ridge and Rosebud are the material foundation of 
+The geology and soils of Pine Ridge are the material foundation of
 Lakota sovereignty. The Arikaree aquifer, the Pierre Shale, the Badlands formations 
 are the land itself. Federal geological surveys conducted on these territories produce 
 data that describes Tribal resources. That data is subject to OCAP® principles: Tribal 
@@ -117,8 +117,8 @@ _DATA_SOURCES: dict[str, dict] = {
     "tribal_soil_profiles": {
         "name":     "Tribal-Collected Soil Profile Data",
         "citation": (
-            "Data collected by or in partnership with the Oglala Lakota "
-            "and/or Sicangu Lakota natural resource departments. "
+            "Data collected by or in partnership with the Oglala Sioux Tribe "
+            "or Oglala Lakota College. "
             "Governed by OCAP®: Tribal Nations retain ownership and control."
         ),
         "url":      "data/governed/ (local only, denied by Git)",
@@ -134,8 +134,8 @@ _DATA_SOURCES: dict[str, dict] = {
     "tribal_well_logs": {
         "name":     "Tribal-Collected Well Log Data",
         "citation": (
-            "Data collected by or in partnership with the Oglala Lakota "
-            "and/or Sicangu Lakota natural resource departments. "
+            "Data collected by or in partnership with the Oglala Sioux Tribe "
+            "or Oglala Lakota College. "
             "Governed by OCAP®: Tribal Nations retain ownership and control."
         ),
         "url":      "data/governed/ (local only, denied by Git)",
@@ -159,7 +159,7 @@ def print_data_acknowledgment(source_keys: list[str] | None = None) -> None:
     print()
     print(
         "This analysis uses data that describes the lands and subsurface\n"
-        "resources of the Oceti Sakowin, the Lakota, Dakota, and Nakota\n"
+        "resources of the Oglala Sioux Tribe and the Oglala Lakota people.\n"
         "peoples. This data is governed by the following frameworks:"
     )
     print()

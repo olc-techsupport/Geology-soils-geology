@@ -8,9 +8,13 @@ ROOT = Path(__file__).resolve().parents[1]
 def replace_cell(notebook, marker, source, cell_type="code"):
     matches = [index for index, cell in enumerate(notebook.cells) if marker in cell.source]
     if not matches:
-        if any(cell.source == source for cell in notebook.cells):
-            return
-        raise RuntimeError(f"Notebook marker not found: {marker}")
+        signature = next((line.strip() for line in source.splitlines() if line.strip()), "")
+        matches = [
+            index for index, cell in enumerate(notebook.cells)
+            if signature and cell.source.lstrip().startswith(signature)
+        ]
+        if not matches:
+            raise RuntimeError(f"Notebook marker not found: {marker}")
     new_cell = nbformat.v4.new_code_cell(source) if cell_type == "code" else nbformat.v4.new_markdown_cell(source)
     notebook.cells[matches[0]] = new_cell
 
@@ -180,7 +184,7 @@ def update_aquifer():
     replace_cell(notebook, "import fiona",
         "Model-layer inventory is maintained in Notebook 04. This notebook opens only the three aquifer-relevant rasters to avoid repeatedly mixing FileGDB vector and raster drivers in one Windows kernel.",
         "markdown")
-    replace_cell(notebook, 'print("Loading USGS groundwater well sites', '''# Live NWIS access is optional so the geology workflow is reproducible offline.
+    replace_cell(notebook, "# Live NWIS access is optional", '''# Live NWIS access is optional so the geology workflow is reproducible offline.
 # Set this to True only when you intentionally want to refresh the public-well
 # inventory; a failed or empty query is not evidence about the cause of a gap.
 RUN_LIVE_WELL_QUERY = False
@@ -189,21 +193,18 @@ if RUN_LIVE_WELL_QUERY:
     from src.loaders import load_usgs_well_sites
     print("Refreshing the public USGS groundwater-site inventory...")
     wells_pr = load_usgs_well_sites(PINE_RIDGE_BBOX)
-    wells_rb = load_usgs_well_sites(ROSEBUD_BBOX)
     print(f"Pine Ridge bounding-box sites: {len(wells_pr)}")
-    print(f"Rosebud bounding-box sites: {len(wells_rb)}")
     print("These are bounding-box inventory counts, not a causal monitoring-equity analysis.")
 else:
     wells_pr = gpd.GeoDataFrame()
-    wells_rb = gpd.GeoDataFrame()
     print("Live NWIS query skipped (RUN_LIVE_WELL_QUERY=False).")
     print("No claim about current well coverage is made in this run.")
 ''')
-    replace_cell(notebook, "# Well coverage map", '''# Map only a deliberately refreshed inventory; never imply that an unrun query
+    replace_cell(notebook, "# Map only a deliberately refreshed inventory", '''# Map only a deliberately refreshed inventory; never imply that an unrun query
 # or a network failure represents zero monitoring sites.
 if not RUN_LIVE_WELL_QUERY:
     print("Well map skipped because the live public inventory was not refreshed.")
-elif wells_pr.empty and wells_rb.empty:
+elif wells_pr.empty:
     print("No mappable records were returned; no coverage inference is made.")
 else:
     fig, ax = plt.subplots(figsize=(12, 9))
@@ -211,10 +212,7 @@ else:
         ax=ax, facecolor=TEAL_LT, edgecolor=TEAL,
         linewidth=2, alpha=0.3, zorder=2,
     )
-    for wells, label, color in [
-        (wells_pr, "Pine Ridge query", "#2166AC"),
-        (wells_rb, "Rosebud query", "#B2182B"),
-    ]:
+    for wells, label, color in [(wells_pr, "Pine Ridge query", "#2166AC")]:
         if not wells.empty:
             wells.to_crs(CRS_WEB).plot(ax=ax, color=color, markersize=18, label=label, zorder=3)
     ax.set_title("Public USGS groundwater sites returned by this deliberate refresh")
@@ -317,7 +315,7 @@ to deny-by-default storage, explicit authority and purpose fields, and refusal
 to publish governed records automatically. See `docs/data_sovereignty.md`.''', "markdown")
     replace_cell(notebook, "## Series Summary", '''## Series status
 
-The nine notebooks provide regional geology context, reproducible public-source
+The nine notebooks provide Pine Ridge geology context, reproducible public-source
 inventory methods, evidence and authorization gates, and governed field-intake
 templates. Soil, hazard, monitoring-gap, and policy conclusions remain bounded
 by verified coverage, source fitness, authorized observations, and OST/OLC

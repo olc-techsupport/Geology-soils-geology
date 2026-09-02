@@ -9,8 +9,8 @@ CRS definitions, URL bases, field name standards, data source references,
 and the 3D model metadata.
 
 Data sovereignty note
-This repository describes the subsurface geology and soils of lands
-belonging to the Oglala Lakota and Sicangu Lakota peoples. Public federal
+This repository describes the subsurface geology and soils of Pine Ridge
+Reservation, homeland of the Oglala Lakota people. Public federal
 datasets (USGS, USDA) covering these territories do not transfer authority
 over these lands or their resources to federal agencies or researchers.
 All data use is governed by OCAP®, CARE, FAIR, and IEEE 2890-2025.
@@ -55,39 +55,24 @@ def ensure_project_directories() -> None:
                       TEMPLATE_DIR, OUTPUTS_DIR, FIGURES_DIR]:
         directory.mkdir(parents=True, exist_ok=True)
 
-# Study area: Pine Ridge and Rosebud Reservations
+# Study area: Pine Ridge Reservation only
 # Bounding boxes (WGS84: min_lon, min_lat, max_lon, max_lat)
 PINE_RIDGE_BBOX = _bbox("pine_ridge")
-ROSEBUD_BBOX = _bbox("rosebud")
-COMBINED_BBOX = _bbox("combined")
-STUDY_BBOX = _bbox("regional")
+# Compatibility alias: every analysis and output is restricted to Pine Ridge.
+STUDY_BBOX = PINE_RIDGE_BBOX
 
 # Approximate centroids (WGS84)
 PINE_RIDGE_CENTROID = (-102.5, 43.1)
-ROSEBUD_CENTROID    = (-100.7, 43.2)
 
 # Census TIGER Nation names
 # Exact strings from the AIANNH shapefile NAME field
-PRIMARY_NATIONS_CENSUS = ["Pine Ridge", "Rosebud"]
+PRIMARY_NATIONS_CENSUS = ["Pine Ridge"]
 PRIMARY_NATIONS_COMMON = {
     "Pine Ridge": "Oglala Lakota",
-    "Rosebud":    "Sicangu Lakota (Rosebud)",
 }
-
-OCETI_SAKOWIN_CENSUS_NAMES = [
-    "Pine Ridge", "Rosebud", "Standing Rock", "Cheyenne River",
-    "Lower Brule", "Crow Creek", "Lake Traverse", "Flandreau",
-]
 
 CENSUS_TO_COMMON = {
     "Pine Ridge":     "Oglala Lakota",
-    "Rosebud":        "Sicangu Lakota (Rosebud)",
-    "Standing Rock":  "Standing Rock Sioux",
-    "Cheyenne River": "Cheyenne River Sioux",
-    "Lower Brule":    "Lower Brule Sioux",
-    "Crow Creek":     "Crow Creek Sioux",
-    "Lake Traverse":  "Sisseton Wahpeton Oyate",
-    "Flandreau":      "Flandreau Santee Sioux",
 }
 
 # API base URLs
@@ -107,7 +92,7 @@ USGS_LANDSLIDE_URL = (
 # USGS 3D Geological Model of western South Dakota
 # Spangler 2024 ScienceBase doi:10.5066/P9LK4QHJ
 # CC0 no restrictions on use
-# Study area: west of Missouri River to Wyoming border (covers Pine Ridge and Rosebud)
+# Regional source extent includes Pine Ridge; analyses are restricted to Pine Ridge.
 WSD_3D_MODEL = {
     "sciencebase_id": "642c5a73d34ee8d4add22046",
     "doi":            "10.5066/P9LK4QHJ",
@@ -216,12 +201,12 @@ FIELD_OBSERVATION_FIELDS = [
 # Data sovereignty
 TREATY_PROVENANCE = {
     "treaty_territory": (
-        "1868 Fort Laramie Treaty Oceti Sakowin territory, "
+        "1868 Fort Laramie Treaty territory relevant to the Oglala Sioux Tribe, "
         "including the Great Sioux Reservation"
     ),
     "treaty_status": (
-        "The lands of Pine Ridge and Rosebud Reservations are the sovereign "
-        "territory of the Oglala Lakota and Sicangu Lakota peoples respectively. "
+        "Pine Ridge Reservation is the sovereign territory of the Oglala Sioux "
+        "Tribe and the homeland of the Oglala Lakota people. "
         "Federal and state geological surveys conducted on these lands do not "
         "transfer authority over subsurface resources to federal agencies."
     ),

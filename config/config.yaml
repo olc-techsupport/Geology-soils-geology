@@ -8,8 +8,8 @@
 # Tribal context
 nation:
   primary:    "Oglala Lakota"
-  secondary:  "Sicangu Lakota"
-  collective: "Oceti Sakowin"
+  government: "Oglala Sioux Tribe"
+  reservation: "Pine Ridge Reservation"
 
 # Bounding boxes (WGS84: west, south, east, north) 
 bounding_box:
@@ -18,21 +18,6 @@ bounding_box:
     south:   42.5
     east:  -101.5
     north:   43.8
-  rosebud:
-    west:  -101.5
-    south:   42.8
-    east:   -99.8
-    north:   43.6
-  combined:
-    west:  -103.5
-    south:   42.5
-    east:   -99.8
-    north:   43.8
-  regional:   # extended for 3D model and regional context
-    west:  -104.5
-    south:   42.3
-    east:   -99.0
-    north:   44.0
 
 # SSURGO survey areas
 # Candidate AREASYMBOL values. Validate these against the live SDA sacatalog
@@ -45,11 +30,6 @@ ssurgo_areasymbol:
     - "SD063"
     - "SD071"
     - "SD102"
-  rosebud:
-    - "SD053"
-    - "SD095"
-    - "SD121"
-    - "SD123"
 
 # 3D Geologic Model
 # Spangler 2024 USGS ScienceBase doi:10.5066/P9LK4QHJ
