@@ -1,0 +1,42 @@
+name: tribal-soils-geology
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - numpy
+  - pandas
+  - openpyxl         # reads the Tribal field-data Excel templates and intake files
+  - geopandas
+  - shapely>=2.0
+  - fiona
+  - pyproj
+  - rasterio
+  - rioxarray        # raster metadata access used by the 3DEP depth maps
+  - xarray
+  - scipy
+  - matplotlib
+  - matplotlib-scalebar
+  - contextily
+  - folium
+  - plotly           # 3D visualization (notebook 04)
+  - pyvista          # 3D subsurface rendering (notebook 04)
+  - pyvistaqt        # pyvista Qt backend
+  - vtk              # pyvista dependency
+  - ipywidgets       # interactive controls in notebooks
+  - ipykernel
+  - jupyter
+  - jupyterlab
+  - notebook
+  - pyyaml
+  - pytest
+  - nbclient
+  - requests
+  - tenacity
+  - tqdm
+  - seaborn
+  - pyogrio          # fast GeoDataFrame I/O (needed for large GDB files)
+  - pip
+  - pip:
+    - sciencebasepy  # USGS ScienceBase Python client
+    - py3dep         # USGS 3DEP DEM access (notebook 04)

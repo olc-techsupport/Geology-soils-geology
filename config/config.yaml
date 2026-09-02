@@ -1,0 +1,124 @@
+# tribal_soils_geology configuration
+# All configurable parameters live here.
+# To adapt for a different Nation:
+#   1. Update nation section
+#   2. Update bounding_box
+#   3. Update ssurgo_areasymbol list for your HUCs/counties
+
+# Tribal context
+nation:
+  primary:    "Oglala Lakota"
+  secondary:  "Sicangu Lakota"
+  collective: "Oceti Sakowin"
+
+# Bounding boxes (WGS84: west, south, east, north) 
+bounding_box:
+  pine_ridge:
+    west:  -103.5
+    south:   42.5
+    east:  -101.5
+    north:   43.8
+  rosebud:
+    west:  -101.5
+    south:   42.8
+    east:   -99.8
+    north:   43.6
+  combined:
+    west:  -103.5
+    south:   42.5
+    east:   -99.8
+    north:   43.8
+  regional:   # extended for 3D model and regional context
+    west:  -104.5
+    south:   42.3
+    east:   -99.0
+    north:   44.0
+
+# SSURGO survey areas
+# Candidate AREASYMBOL values. Validate these against the live SDA sacatalog
+# with src.ssurgo.survey_status before acquisition; survey areas are not safely
+# inferred from county FIPS codes and may change independently of county names.
+ssurgo_areasymbol:
+  pine_ridge:
+    - "SD007"
+    - "SD047"
+    - "SD063"
+    - "SD071"
+    - "SD102"
+  rosebud:
+    - "SD053"
+    - "SD095"
+    - "SD121"
+    - "SD123"
+
+# 3D Geologic Model
+# Spangler 2024 USGS ScienceBase doi:10.5066/P9LK4QHJ
+# Files must be downloaded manually and placed in data/raw/geology/
+wsd_3d_model:
+  sciencebase_id: "642c5a73d34ee8d4add22046"
+  doi:            "10.5066/P9LK4QHJ"
+  gdb_filename:   "WSouthDakota3D.gdb"
+  shapefiles_dir: "WSD_Shapefiles"
+  tables_dir:     "WSD_NonspatialTables"
+  crs:            "EPSG:4269"   # NAD83 (native CRS of the GDB)
+
+# Horizons of primary interest for land and water management
+# These drive the depth-to-formation maps in notebook 04
+key_horizons:
+  - "Ogallala Group"          # Arikaree aquifer top
+  - "Pierre Shale"            # expansive clay slope hazard
+  - "Hell Creek Formation"    # near-surface eastern reservation
+  - "Niobrara Formation"      # secondary aquifer
+  - "Madison Group"           # deep confined aquifer
+
+# State geology download
+# South Dakota state geologic map from USGS Mineral Resources
+# Download from: https://mrdata.usgs.gov/geology/state/
+# Place in data/raw/geology/
+state_geology:
+  source:   "https://mrdata.usgs.gov/geology/state/"
+  state:    "South Dakota"
+  filename: "sd_geo.gdb"       # update if filename differs after download
+
+# Analysis parameters
+analysis:
+  cross_section_resolution_m: 500   # sample spacing along transects (meters)
+  depth_map_resolution_m:    1000   # raster resolution for depth-to-formation maps
+  min_horizon_coverage_pct:    50   # minimum % coverage to include a horizon
+  model_3d_stride:              12   # raster-cell stride for full-model HTML
+  vertical_exaggeration:        10
+
+# SSURGO analysis parameters
+ssurgo:
+  # Erodibility threshold for flagging high-erosion risk map units
+  k_factor_high:   0.40
+  # Linear extensibility threshold for expansive soil flag (cm/cm)
+  lep_high:        0.10
+  # Drainage classes considered poorly drained
+  poor_drainage:   ["Very poorly drained", "Poorly drained", "Somewhat poorly drained"]
+  # Hydrologic groups with high runoff potential
+  high_runoff_hsg: ["C", "D"]
+
+# Geologic hazard thresholds
+hazards:
+  # Pierre Shale depth threshold for expansive soil risk (meters)
+  pierre_shale_depth_m:   10
+  # Slope threshold for landslide susceptibility (degrees)
+  slope_hazard_deg:       15
+  # Radon potential categories (EPA classification)
+  radon_high_zone:         1   # EPA Zone 1 = highest potential
+
+# Pipeline paths
+paths:
+  raw:       data/raw
+  cache:     data/cache
+  processed: data/processed
+  outputs:   outputs
+  figures:   outputs/figures
+
+# Data sovereignty
+governance:
+  ocap:       "https://fnigc.ca/ocap-training/"
+  care:       "https://www.gida-global.org/care"
+  fair:       "https://www.go-fair.org/fair-principles/"
+  ieee_2890:  "https://standards.ieee.org/ieee/2890/10318/"
