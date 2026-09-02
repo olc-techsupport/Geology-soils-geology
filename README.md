@@ -13,7 +13,7 @@ data, and provides intake frameworks for Tribal-collected field data.
 
 The series is designed for use by PhD geologists, geological engineers, soil
 scientists, and Tribal resource managers. Visualizations are accessible to
-community members and Tribal decision makers.
+community members and Tribal decision makers. CHECK
 
 ## Notebook Series
 
