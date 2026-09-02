@@ -1,0 +1,55 @@
+# Jupyter
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+
+# Python caches and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+.conda/
+
+# Generated notebook and download caches
+Notebooks/cache/
+.cache/
+cache/
+tmp/
+temp/
+
+# SQLite temporary files
+*.sqlite-shm
+*.sqlite-wal
+*.sqlite-journal
+
+# Packaging and build outputs
+build/
+dist/
+*.egg-info/
+
+# IDE settings
+.vscode/
+.idea/
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+~$*
+
+# Large raw geology dataset
+data/raw/geology/Shapefiles/Fault_Points.*
