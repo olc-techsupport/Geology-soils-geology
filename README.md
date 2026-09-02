@@ -1,8 +1,14 @@
 # Tribal Soils and Geology
 
-**Author:** Lilly Jones, PhD, Daear Consulting                                                                 
-**Primary Focus:** Pine Ridge (Oglala Lakota) and Rosebud (Sicangu Lakota), Oceti Sakowin                                                                 
-**License:** GNU Affero GPL 3.0                                                                                   
+Developed by: Lilly Jones, PhD, Daear Consulting LLC                                                                               
+Developed for: Oglala Lakota College                                                                                            
+Funding: This material was developed as part of a project funded by the USDA National Institute of Food and Agriculture (NIFA).                       
+Project role: Daear Consulting LLC developed the geospatial code, workflows, documentation, and instructional materials under contract to Oglala Lakota College.                                                                                                                      
+
+License: Apache License 2.0 (code; review of other materials is pending)
+
+## Data Sovereignty and Governance (draft under review)
+This repository contains workflows developed for use in support of Oglala Lakota College and Oglala Sioux Tribe–related research, education, and data activities. Public availability of code or documentation does not imply that Tribal data, knowledge, or derived information are open or unrestricted. Use of Tribal data and knowledge remains subject to applicable Tribal governance, permissions, protocols, and data sovereignty requirements.                                                                               
 
 ## Overview
 
