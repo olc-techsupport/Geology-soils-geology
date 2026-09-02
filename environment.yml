@@ -1,17 +1,16 @@
 name: tribal-soils-geology
 channels:
   - conda-forge
-  - defaults
 dependencies:
   - python=3.11
-  - numpy
-  - pandas
+  - numpy>=1.26,<3
+  - pandas>=2.1,<3
   - openpyxl         # reads the Tribal field-data Excel templates and intake files
-  - geopandas
+  - geopandas>=0.14,<2
   - shapely>=2.0
   - fiona
   - pyproj
-  - rasterio
+  - rasterio>=1.3,<2
   - rioxarray        # raster metadata access used by the 3DEP depth maps
   - xarray
   - scipy
@@ -29,7 +28,7 @@ dependencies:
   - jupyterlab
   - notebook
   - pyyaml
-  - pytest
+  - pytest>=8,<10
   - nbclient
   - requests
   - tenacity
@@ -38,5 +37,5 @@ dependencies:
   - pyogrio          # fast GeoDataFrame I/O (needed for large GDB files)
   - pip
   - pip:
-    - sciencebasepy  # USGS ScienceBase Python client
-    - py3dep         # USGS 3DEP DEM access (notebook 04)
+    - sciencebasepy>=2.0,<3  # USGS ScienceBase Python client
+    - py3dep>=0.19,<1        # USGS 3DEP DEM access (notebook 04)

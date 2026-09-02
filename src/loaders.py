@@ -47,6 +47,7 @@ from src.constants import (
     WSD_3D_MODEL,
     GEOLOGY_DIR,
     SSURGO_DIR,
+    STATE_GEOLOGY_FILENAME,
 )
 
 log = logging.getLogger(__name__)
@@ -226,8 +227,8 @@ def load_usgs_well_sites(
     """
     Fetch USGS groundwater monitoring well sites within a bounding box.
 
-    Note: Coverage is systematically sparse on Tribal lands. Document gaps
-    as a policy finding, absence of data is a monitoring equity issue.
+    Returned records are an endpoint inventory, not a causal coverage analysis.
+    Compare timestamped, geometry-clipped inventories before reporting a gap.
     """
     bbox_str   = f"{bbox[0]:.2f}_{bbox[1]:.2f}_{bbox[2]:.2f}_{bbox[3]:.2f}"
     cache_file = CACHE_DIR/f"usgs_gw_sites_{bbox_str}.csv"
@@ -252,16 +253,15 @@ def load_usgs_well_sites(
         except Exception as e:
             warnings.warn(
                 f"USGS well site query failed: {e}. "
-                "Sparse well coverage on Tribal lands is a monitoring equity gap.",
+                "A request failure is not evidence of zero sites or its cause.",
                 UserWarning, stacklevel=2,
             )
             return gpd.GeoDataFrame()
 
     if df.empty:
         warnings.warn(
-            "No USGS groundwater monitoring sites found. "
-            "Monitoring gaps on Tribal lands are a federal infrastructure equity gap. "
-            "Tribal-collected well logs fill this gap, see data/templates/.",
+            "The USGS query returned no records. This does not establish why: "
+            "verify endpoint status, parameters, timestamp, and geography.",
             UserWarning, stacklevel=2,
         )
         return gpd.GeoDataFrame()
@@ -618,7 +618,7 @@ def load_ssurgo_horizons() -> pd.DataFrame:
 # State geologic map (local file)
 
 def load_state_geology(bbox=None):
-    shp = GEOLOGY_DIR/"SD_geol_poly.shp"
+    shp = GEOLOGY_DIR/STATE_GEOLOGY_FILENAME
     if not shp.exists():
         warnings.warn("SD_geol_poly.shp not found in data/raw/geology/", UserWarning)
         return gpd.GeoDataFrame()
@@ -654,13 +654,15 @@ def load_tribal_soil_profiles(
     """
     Load Tribal-collected soil profile data from local Excel or CSV.
 
-    This data is GITIGNORED and stays under Tribal control.
+    This data is denied by Git and stays in local governed storage.
     See Field data forms/soil_profile_template.xlsx for the expected format.
     Returns empty DataFrame with correct columns if file not found.
     """
-    from src.constants import SOIL_PROFILE_FIELDS, RAW_DIR
+    from src.constants import SOIL_PROFILE_FIELDS, GOVERNED_DIR, RAW_DIR
     if path is None:
         candidates = [
+            GOVERNED_DIR/"soil_profiles.csv",
+            GOVERNED_DIR/"soil_profiles.xlsx",
             RAW_DIR/"soil_profiles.csv",
             RAW_DIR/"soil_profiles.xlsx",
         ]
@@ -668,7 +670,7 @@ def load_tribal_soil_profiles(
 
     if path is None:
         warnings.warn(
-            "No Tribal soil profile data found in data/raw/. "
+            "No Tribal soil profile data found in data/governed/. "
             "See Field data forms/soil_profile_template.xlsx to begin "
             "collecting field measurements.",
             UserWarning, stacklevel=2,
@@ -689,12 +691,14 @@ def load_tribal_well_logs(
     """
     Load Tribal-collected well log data from local Excel or CSV.
 
-    This data is GITIGNORED and stays under Tribal control.
+    This data is denied by Git and stays in local governed storage.
     See Field data forms/well_log_template.xlsx for the expected format.
     """
-    from src.constants import WELL_LOG_FIELDS, RAW_DIR
+    from src.constants import WELL_LOG_FIELDS, GOVERNED_DIR, RAW_DIR
     if path is None:
         candidates = [
+            GOVERNED_DIR/"well_logs.csv",
+            GOVERNED_DIR/"well_logs.xlsx",
             RAW_DIR/"well_logs.csv",
             RAW_DIR/"well_logs.xlsx",
         ]
@@ -702,7 +706,7 @@ def load_tribal_well_logs(
 
     if path is None:
         warnings.warn(
-            "No Tribal well log data found in data/raw/. "
+            "No Tribal well log data found in data/governed/. "
             "See Field data forms/well_log_template.xlsx.",
             UserWarning, stacklevel=2,
         )

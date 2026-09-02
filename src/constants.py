@@ -17,9 +17,18 @@ All data use is governed by OCAP®, CARE, FAIR, and IEEE 2890-2025.
 """
 
 from pathlib import Path
+import yaml
 
 # Repository root
 REPO_ROOT = Path(__file__).resolve().parents[1]
+CONFIG_PATH = REPO_ROOT/"config"/"config.yaml"
+with CONFIG_PATH.open(encoding="utf-8") as _stream:
+    CONFIG = yaml.safe_load(_stream)
+
+
+def _bbox(name: str) -> tuple[float, float, float, float]:
+    value = CONFIG["bounding_box"][name]
+    return (value["west"], value["south"], value["east"], value["north"])
 
 # Coordinate reference systems
 CRS_GEOGRAPHIC = "EPSG:4326"    # WGS84 lat/lon all spatial data
@@ -30,6 +39,8 @@ CRS_WEB        = "EPSG:3857"    # Web Mercator basemap tiles
 # Data directories
 CACHE_DIR     = REPO_ROOT/"data"/"cache"
 RAW_DIR       = REPO_ROOT/"data"/"raw"
+PUBLIC_DIR    = REPO_ROOT/"data"/"public"
+GOVERNED_DIR  = REPO_ROOT/"data"/"governed"
 PROCESSED_DIR = REPO_ROOT/"data"/"processed"
 GEOLOGY_DIR   = RAW_DIR/"geology"
 SSURGO_DIR    = RAW_DIR/"ssurgo"
@@ -40,15 +51,16 @@ FIGURES_DIR   = OUTPUTS_DIR/"figures"
 def ensure_project_directories() -> None:
     """Create runtime directories explicitly instead of during module import."""
     for directory in [CACHE_DIR, PROCESSED_DIR, GEOLOGY_DIR, SSURGO_DIR,
+                      PUBLIC_DIR, GOVERNED_DIR,
                       TEMPLATE_DIR, OUTPUTS_DIR, FIGURES_DIR]:
         directory.mkdir(parents=True, exist_ok=True)
 
 # Study area: Pine Ridge and Rosebud Reservations
 # Bounding boxes (WGS84: min_lon, min_lat, max_lon, max_lat)
-PINE_RIDGE_BBOX    = (-103.5, 42.5, -101.5, 43.8)
-ROSEBUD_BBOX       = (-101.5, 42.8,  -99.8, 43.6)
-COMBINED_BBOX      = (-103.5, 42.5,  -99.8, 43.8)  # both reservations
-STUDY_BBOX         = (-104.5, 42.3, -99.0, 44.0)  # extended regional context
+PINE_RIDGE_BBOX = _bbox("pine_ridge")
+ROSEBUD_BBOX = _bbox("rosebud")
+COMBINED_BBOX = _bbox("combined")
+STUDY_BBOX = _bbox("regional")
 
 # Approximate centroids (WGS84)
 PINE_RIDGE_CENTROID = (-102.5, 43.1)
@@ -111,13 +123,16 @@ WSD_3D_MODEL = {
         "?service=wms&request=getcapabilities&version=1.3.0"
     ),
     # Local paths: files placed in data/raw/geology/ after manual download
-    "gdb_path":        GEOLOGY_DIR/"WSouthDakota3D.gdb",
-    "shapefiles_path": GEOLOGY_DIR/"Shapefiles",
-    "tables_path":     GEOLOGY_DIR/"NonspatialTables",
+    "gdb_path":        GEOLOGY_DIR/CONFIG["wsd_3d_model"]["gdb_filename"],
+    "shapefiles_path": GEOLOGY_DIR/CONFIG["wsd_3d_model"]["shapefiles_dir"],
+    "tables_path":     GEOLOGY_DIR/CONFIG["wsd_3d_model"]["tables_dir"],
     "n_horizons":      25,
     "n_faults":        35,
-    "crs":             "EPSG:4269",   # NAD83 geographic is used in the GDB
+    "raster_crs":      CONFIG["wsd_3d_model"]["raster_crs"],
 }
+
+ANALYSIS_CONFIG = CONFIG["analysis"]
+STATE_GEOLOGY_FILENAME = CONFIG["state_geology"]["filename"]
 
 # Stratigraphic units modeled in the 3D model (top to bottom, approximate)
 # Sources: WSD_NonspatialTables/DescriptionOfModelUnits
@@ -187,13 +202,15 @@ WELL_LOG_FIELDS = [
     "well_id", "date", "observer", "lat", "lon",
     "total_depth_ft", "casing_depth_ft", "water_depth_ft",
     "unit_top_ft", "unit_bottom_ft", "lithology",
-    "color", "grain_size", "notes",
+    "color", "grain_size", "notes", "data_authority", "access_level",
+    "authorized_use", "authorization_date",
 ]
 
 FIELD_OBSERVATION_FIELDS = [
     "obs_id", "date", "observer", "lat", "lon",
     "formation", "rock_type", "structure",
-    "strike", "dip", "notes", "photo_ids",
+    "strike", "dip", "notes", "photo_ids", "data_authority",
+    "access_level", "authorized_use", "authorization_date",
 ]
 
 # Data sovereignty

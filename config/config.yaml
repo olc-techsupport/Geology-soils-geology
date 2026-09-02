@@ -58,9 +58,9 @@ wsd_3d_model:
   sciencebase_id: "642c5a73d34ee8d4add22046"
   doi:            "10.5066/P9LK4QHJ"
   gdb_filename:   "WSouthDakota3D.gdb"
-  shapefiles_dir: "WSD_Shapefiles"
-  tables_dir:     "WSD_NonspatialTables"
-  crs:            "EPSG:4269"   # NAD83 (native CRS of the GDB)
+  shapefiles_dir: "Shapefiles"
+  tables_dir:     "NonspatialTables"
+  raster_crs:     "EPSG:5070"   # verify each model-top raster at runtime
 
 # Horizons of primary interest for land and water management
 # These drive the depth-to-formation maps in notebook 04
@@ -78,7 +78,7 @@ key_horizons:
 state_geology:
   source:   "https://mrdata.usgs.gov/geology/state/"
   state:    "South Dakota"
-  filename: "sd_geo.gdb"       # update if filename differs after download
+  filename: "SD_geol_poly.shp"
 
 # Analysis parameters
 analysis:
@@ -110,6 +110,10 @@ hazards:
 
 # Pipeline paths
 paths:
+  public:    data/public
+  # Governed records are local-only and denied by Git. Existing loaders retain
+  # a temporary data/raw fallback for migration from earlier releases.
+  governed:  data/governed
   raw:       data/raw
   cache:     data/cache
   processed: data/processed
@@ -118,6 +122,7 @@ paths:
 
 # Data sovereignty
 governance:
+  review_status: "DRAFT — pending OST/OLC review"
   ocap:       "https://fnigc.ca/ocap-training/"
   care:       "https://www.gida-global.org/care"
   fair:       "https://www.go-fair.org/fair-principles/"

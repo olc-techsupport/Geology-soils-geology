@@ -8,6 +8,7 @@ import pandas as pd
 REQUIRED_GOVERNANCE_FIELDS = [
     "data_authority", "access_level", "authorized_use", "authorization_date",
 ]
+PURPOSE_IDS = {"soils-analysis", "aquifer-geology", "geologic-hazards", "education"}
 ALLOWED_ACCESS_LEVELS = {"internal", "restricted", "public"}
 
 
@@ -44,7 +45,15 @@ def assess_coverage(data: gpd.GeoDataFrame, boundary: gpd.GeoDataFrame,
 
 
 def require_coverage(data: gpd.GeoDataFrame, boundary: gpd.GeoDataFrame,
-                     source: str, threshold: float = 0.95) -> CoverageReport:
+                     source: str, threshold: float = 0.95,
+                     expected_areasymbols: set[str] | None = None) -> CoverageReport:
+    if expected_areasymbols is not None:
+        if "areasymbol" not in data.columns:
+            raise SoilCoverageError(f"{source} has no areasymbol field; source relevance cannot be verified")
+        observed = set(data["areasymbol"].dropna().astype(str).str.upper())
+        unexpected = observed - {value.upper() for value in expected_areasymbols}
+        if unexpected:
+            raise SoilCoverageError(f"{source} includes unapproved survey areas: {sorted(unexpected)}")
     report = assess_coverage(data, boundary, source, threshold)
     if report.status != "sufficient":
         raise SoilCoverageError(
@@ -67,11 +76,24 @@ def validate_governed_profiles(frame: pd.DataFrame, authorized_use: str | None =
     for field in ["data_authority", "authorized_use", "authorization_date"]:
         if result[field].isna().any() or result[field].astype(str).str.strip().eq("").any():
             raise GovernanceError(f"Every record requires {field}")
+    result["authorized_use"] = result["authorized_use"].astype(str).str.strip().str.lower()
+    invalid_purposes = ~result["authorized_use"].isin(PURPOSE_IDS)
+    if invalid_purposes.any():
+        raise GovernanceError(f"authorized_use must be one of: {sorted(PURPOSE_IDS)}")
+    result["authorization_date"] = pd.to_datetime(result["authorization_date"], errors="coerce")
+    if result["authorization_date"].isna().any():
+        raise GovernanceError("authorization_date must be a valid date")
     if authorized_use is not None:
-        result = result[result["authorized_use"].astype(str).str.contains(
-            authorized_use, case=False, regex=False, na=False
-        )]
+        purpose = authorized_use.strip().lower()
+        if purpose not in PURPOSE_IDS:
+            raise GovernanceError(f"Requested purpose must be one of: {sorted(PURPOSE_IDS)}")
+        result = result[result["authorized_use"] == purpose]
     return result.reset_index(drop=True)
+
+
+def validate_governed_records(frame: pd.DataFrame, purpose: str) -> pd.DataFrame:
+    """Apply the common deny-by-default governance gate to any record type."""
+    return validate_governed_profiles(frame, authorized_use=purpose)
 
 
 def evidence_register() -> pd.DataFrame:

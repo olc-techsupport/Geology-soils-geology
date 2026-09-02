@@ -1,0 +1,13 @@
+repos:
+  - repo: local
+    hooks:
+      - id: governed-data-release-check
+        name: Reject governed or conventionally named sensitive inputs
+        entry: python -m scripts.check_release
+        language: system
+        pass_filenames: false
+      - id: pytest
+        name: Unit tests
+        entry: python -m pytest -q
+        language: system
+        pass_filenames: false

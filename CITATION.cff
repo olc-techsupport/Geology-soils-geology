@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "Please cite this software and each source dataset used in an analysis."
+title: "OLC USDA NIFA Tribal Soils and Geology: Stage 2 Geospatial Series"
+type: software
+version: 0.2.0
+authors:
+  - family-names: Jones
+    given-names: Lilly
+    affiliation: Daear Consulting LLC
+repository-code: "https://github.com/olc-techsupport/Geology-soils-geology"
+license: Apache-2.0
+abstract: >-
+  Stage 2 geospatial workflows and instructional notebooks developed for
+  Oglala Lakota College. Governance language remains under OST/OLC review.
+keywords:
+  - geospatial
+  - geology
+  - soils
+  - Oglala Lakota College
+  - Indigenous Data Sovereignty

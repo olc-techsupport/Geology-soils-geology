@@ -1,0 +1,44 @@
+schema_version: 1
+policy: >-
+  Public source data are reacquired outside ordinary Git. Complete retrieved_at,
+  sha256, size_bytes, source_version, and verified_by for each local acquisition.
+datasets:
+  - id: usgs-wsd-3d-2024
+    title: Digital data for a 3D Geological Model of western South Dakota, USA
+    steward: U.S. Geological Survey
+    doi: 10.5066/P9LK4QHJ
+    expected_paths:
+      - data/raw/geology/WSouthDakota3D.gdb
+      - data/raw/geology/NonspatialTables
+      - data/raw/geology/Shapefiles
+    retrieved_at:
+    source_version: 2024 data release
+    sha256:
+    size_bytes:
+    horizontal_crs: EPSG:5070 for model-top rasters; verify each layer
+    vertical_datum: verify from authoritative source metadata before depth analysis
+    verified_by:
+  - id: usgs-sd-state-geology
+    title: South Dakota state geologic map compilation
+    steward: U.S. Geological Survey
+    url: https://mrdata.usgs.gov/geology/state/
+    expected_paths:
+      - data/raw/geology/SD_geol_poly.shp
+      - data/raw/geology/SD_units.csv
+    retrieved_at:
+    source_version:
+    sha256:
+    size_bytes:
+    horizontal_crs: verify from .prj/source metadata
+    verified_by:
+  - id: usda-ssurgo
+    title: Soil Survey Geographic Database
+    steward: USDA Natural Resources Conservation Service
+    url: https://websoilsurvey.nrcs.usda.gov/
+    expected_paths:
+      - data/raw/ssurgo/<validated-areasymbol>/<soil-geodatabase>.gdb
+    retrieved_at:
+    source_version:
+    sha256:
+    size_bytes:
+    verified_by:

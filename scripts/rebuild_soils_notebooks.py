@@ -23,6 +23,7 @@ import yaml
 from IPython.display import display
 from src.constants import REPO_ROOT as ROOT, OUTPUTS_DIR
 from src.loaders import load_tribal_boundaries
+from src.sovereignty import print_data_acknowledgment, generate_citations
 with open(ROOT/"config"/"config.yaml") as stream: CONFIG = yaml.safe_load(stream)
 primary = load_tribal_boundaries(["Pine Ridge", "Rosebud"])
 pine_ridge = primary[primary["NAME"] == "Pine Ridge"]
@@ -35,6 +36,7 @@ def build_05():
 
 This notebook audits public soil-data availability. It does **not** assume that Oglala Lakota soils are available, and it does not use adjacent-county soils as a substitute. A missing catalog record documents public availability status only; it does not establish why data are absent.'''),
         nbf.v4.new_code_cell(setup),
+        nbf.v4.new_code_cell('print_data_acknowledgment(["usda_ssurgo", "census_aiannh"])'),
         nbf.v4.new_markdown_cell('''## Local inventory
 
 `.ppkx` watershed projects are reported but rejected as SSURGO sources. Only actual soil geodatabases enter coverage assessment.'''),
@@ -65,7 +67,10 @@ if RUN_LIVE_AUDIT:
         audit["checked_at_utc"] = checked
         audit["machine_status"] = f"request_failed: {exc}"
 display(audit)
-print("Practical conclusion: no Oglala Lakota SSURGO source has been obtained through the tested regular public pathways.")'''),
+if RUN_LIVE_AUDIT:
+    print("Interpret only the recorded machine status; absence and cause are separate questions.")
+else:
+    print("No current availability conclusion: the live audit was not run.")'''),
         nbf.v4.new_markdown_cell('''## Geographic coverage gate
 
 Analytical coverage is measured against each reservation polygon. The analysis stops below the configured threshold; nearby polygons may be displayed only as explicitly labeled regional context.'''),
@@ -93,6 +98,7 @@ def build_06():
 
 This notebook analyzes only explicitly authorized field records. Public SSURGO horizons are not expected for Pine Ridge and are not a prerequisite. Empty authorized input is a valid outcome, not an invitation to substitute surrounding-county data.'''),
         nbf.v4.new_code_cell(setup),
+        nbf.v4.new_code_cell('print_data_acknowledgment(["tribal_soil_profiles"])'),
         nbf.v4.new_markdown_cell('''## Governance and authorization gate
 
 Required record fields are `data_authority`, `access_level`, `authorized_use`, and `authorization_date`. The template example row is illustrative and is never loaded automatically.'''),
@@ -101,7 +107,7 @@ from src.soil_evidence import validate_governed_profiles, GovernanceError, REQUI
 profiles = load_tribal_soil_profiles()
 print(f"Records discovered in governed raw-data location: {len(profiles):,}")
 try:
-    authorized_profiles = validate_governed_profiles(profiles, authorized_use="soils analysis")
+    authorized_profiles = validate_governed_profiles(profiles, authorized_use="soils-analysis")
 except GovernanceError as exc:
     authorized_profiles = pd.DataFrame()
     print(f"Governance gate stopped analysis: {exc}")
@@ -135,6 +141,7 @@ def build_07():
 
 Hazard evidence is separated into geology-supported, public-soils-supported, field-supported, and unknown. This notebook does not derive a reservation-wide soil-hazard map from absent Pine Ridge SSURGO coverage.'''),
         nbf.v4.new_code_cell(setup),
+        nbf.v4.new_code_cell('print_data_acknowledgment(["usda_ssurgo", "usgs_3d_model"])'),
         nbf.v4.new_code_cell('''from src.soil_evidence import evidence_register
 register = evidence_register()
 display(register)'''),

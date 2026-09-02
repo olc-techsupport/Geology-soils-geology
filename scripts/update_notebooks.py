@@ -250,11 +250,84 @@ for unit, description in AQUIFER_UNITS.items():
         print(f"  Modeled top elevation: {data.min():.1f} to {data.max():.1f} m NAVD88")
         print(f"  Grid size: {data.shape[0]} x {data.shape[1]}")
 ''')
+    replace_cell(notebook, 'print("Loading Tribal-collected well logs', '''from src.loaders import load_tribal_well_logs
+from src.soil_evidence import validate_governed_records, GovernanceError
+
+print("Loading governed well logs...")
+candidate_wells = load_tribal_well_logs()
+try:
+    tribal_wells = validate_governed_records(candidate_wells, "aquifer-geology")
+except GovernanceError as exc:
+    tribal_wells = pd.DataFrame()
+    print(f"Governance gate stopped well-log analysis: {exc}")
+
+if tribal_wells.empty:
+    print("No well-log records are authorized for aquifer-geology. No summary or map is produced.")
+else:
+    print(f"Authorized well-log records: {len(tribal_wells):,}")
+    print("These observations describe sampled locations only.")
+''')
+    nbformat.write(notebook, path)
+
+
+def update_data_gaps():
+    path = ROOT/"Notebooks"/"09_data_gaps_sovereignty.ipynb"
+    notebook = nbformat.read(path, as_version=4)
+    replace_cell(notebook, "# 09 Data Gaps and Sovereignty", '''# 09 Data Gaps and Sovereignty
+
+**Series:** Tribal Soils and Geology
+
+> Governance framing in this notebook is a draft pending OST/OLC review.
+
+## Evidence-bounded gap assessment
+
+This notebook records candidate data gaps and the evidence required to evaluate
+them. A skipped query, an empty response, or a regional model limitation is not
+by itself evidence of disparity or cause. Policy, funding, staffing, and
+historical-causation claims require authoritative citations and a reproducible
+comparison approved for the intended use.''', "markdown")
+    replace_cell(notebook, "# Systematic inventory of data gaps", '''# Claims register: do not promote an observation or hypothesis to a finding
+# without a saved, reproducible evidence record and authoritative citation.
+data_gaps = pd.DataFrame([
+    ["SSURGO coverage/sampling", "requires current SDA audit and pedon-density metric", "not established in this run"],
+    ["NWIS monitoring coverage", "requires timestamped geometry-based query and comparison", "not established in this run"],
+    ["3D model control density", "requires published control inventory and validation residuals", "not established in this run"],
+    ["State-map effective scale", "verify source metadata and local mapping coverage", "regional-screening limitation"],
+    ["Landslide inventory coverage", "requires authoritative inventory audit", "not established in this run"],
+], columns=["topic", "evidence_required", "current_status"])
+display(data_gaps)
+print("No causal claim about agency funding, staffing, policy, or Tribal decisions is made without cited evidence.")
+''')
+    replace_cell(notebook, "# Score each gap", '''# Priority scoring is withheld until the evidence register is populated and
+# OST/OLC reviewers approve the decision criteria and intended use.
+print("No quantitative gap ranking produced: evidence and locally approved criteria are required.")
+''')
+    replace_cell(notebook, "# Synthesize the data collection priorities", '''print("Candidate future data activities (not an approved priority ranking):")
+print("- groundwater monitoring and well logs")
+print("- soil horizon observations")
+print("- geologic field observations")
+print("- slope-failure inventory")
+print("Each activity requires OST/OLC governance, scientific design, resources, and authorization before collection.")
+''')
+    replace_cell(notebook, "## OCAP® Framework", '''## Governance framework — draft pending OST/OLC review
+
+The substantive governance text for this series is being reviewed by
+OST/OLC-designated colleagues. Until approval, code-level controls are limited
+to deny-by-default storage, explicit authority and purpose fields, and refusal
+to publish governed records automatically. See `docs/data_sovereignty.md`.''', "markdown")
+    replace_cell(notebook, "## Series Summary", '''## Series status
+
+The nine notebooks provide regional geology context, reproducible public-source
+inventory methods, evidence and authorization gates, and governed field-intake
+templates. Soil, hazard, monitoring-gap, and policy conclusions remain bounded
+by verified coverage, source fitness, authorized observations, and OST/OLC
+review. Generated products are screening or instructional candidates, not
+automatically approved decision products.''', "markdown")
     nbformat.write(notebook, path)
 
 
 if __name__ == "__main__":
-    update_soils()
-    update_geology()
-    update_hazards()
+    # Notebooks 05–07 are authored by rebuild_soils_notebooks.py. Keeping their
+    # construction in one place prevents stale marker-based mutations.
     update_aquifer()
+    update_data_gaps()

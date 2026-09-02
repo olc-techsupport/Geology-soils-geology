@@ -53,3 +53,23 @@ desktop.ini
 
 # Large raw geology dataset
 data/raw/geology/Shapefiles/Fault_Points.*
+data/raw/geology/
+data/raw/ssurgo/
+
+# Generated analysis products (publish reviewed artifacts as release assets)
+outputs/
+!outputs/.gitkeep
+
+# Governed Tribal data (deny by default)
+# Public source data belongs under data/public/. Nation- or OLC-controlled
+# records belong under data/governed/ and must never be committed.
+data/governed/**
+!data/governed/.gitkeep
+data/raw/soil_profiles.csv
+data/raw/soil_profiles.xlsx
+data/raw/well_logs.csv
+data/raw/well_logs.xlsx
+data/raw/field_observations.csv
+data/raw/field_observations.xlsx
+data/raw/photos/
+data/raw/gps/

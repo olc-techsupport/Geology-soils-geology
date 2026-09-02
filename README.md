@@ -1,11 +1,18 @@
 # Tribal Soils and Geology
 
+> **Stage 2 release candidate.** Technical hardening is in progress. Data
+> sovereignty and governance language is a draft pending OST/OLC review. Do not
+> treat repository availability as publication approval for governed records or
+> derived products.
+
 Developed by: Lilly Jones, PhD, Daear Consulting LLC                                                                               
 Developed for: Oglala Lakota College                                                                                            
-Funding: This material was developed as part of a project funded by the USDA National Institute of Food and Agriculture (NIFA).                       
+Funding: This material was developed as part of a project funded by the USDA National Institute of Food and Agriculture (NIFA). The award number, official project title, and required agency disclaimer must be confirmed by OLC before a tagged public release.
 Project role: Daear Consulting LLC developed the geospatial code, workflows, documentation, and instructional materials under contract to Oglala Lakota College.                                                                                                                      
 
-License: Apache License 2.0 (code; review of other materials is pending)
+License: Apache License 2.0 for original code. Rights for documentation,
+templates, curriculum, generated products, and third-party data are described
+in `THIRD_PARTY_DATA.md`; OLC review of non-code materials is pending.
 
 ## Data Sovereignty and Governance (draft under review)
 This repository contains workflows developed for use in support of Oglala Lakota College and Oglala Sioux Tribe–related research, education, and data activities. Public availability of code or documentation does not imply that Tribal data, knowledge, or derived information are open or unrestricted. Use of Tribal data and knowledge remains subject to applicable Tribal governance, permissions, protocols, and data sovereignty requirements.                                                                               
@@ -19,7 +26,7 @@ data, and provides intake frameworks for Tribal-collected field data.
 
 The series is designed for use by PhD geologists, geological engineers, soil
 scientists, and Tribal resource managers. Visualizations are accessible to
-community members and Tribal decision makers. CHECK
+community members and Tribal decision makers after scientific and governance review.
 
 ## Notebook Series
 
@@ -56,7 +63,7 @@ intrusive surface is shown separately because it cross-cuts the sequence.
 
 ## Data Sources
 
-### Public data (downloaded manually: see below)
+### Public source data
 
 | Source | What | Notebooks |
 |---|---|---|
@@ -71,7 +78,9 @@ intrusive surface is shown separately because it cross-cuts the sequence.
 ### Tribal-collected data (sensitive data: gitignored)
 
 Field data collected by or in partnership with Tribal natural resource
-departments. Lives in `data/raw/` and is never committed to version control.
+departments lives in the local-only `data/governed/` directory and is denied by
+Git. Legacy `data/raw/soil_profiles.*`, `well_logs.*`, and field-observation
+paths are also ignored during migration. See `docs/data_sovereignty.md`.
 
 | Template | What |
 |---|---|
@@ -80,6 +89,11 @@ departments. Lives in `data/raw/` and is never committed to version control.
 | `field_observation_template.xlsx` | Geologic field notes and measurements |
 
 ## Setup
+
+The supported baseline is a 64-bit Conda environment with Python 3.11. Budget at
+least 10 GB of free disk space for the environment, public inputs, caches, and
+outputs. See `docs/olc_operator_guide.md` for Windows, Linux, offline use, and
+troubleshooting.
 
 ### 1. Download required datasets
 
@@ -119,11 +133,19 @@ for Oglala Lakota soils.
 conda env create -f environment.yml
 conda activate tribal-soils-geology
 
+python -m pip install --no-deps --editable .
+python -m scripts.check_release
+python -m pytest
+
 python -m ipykernel install --user --name tribal-soils-geology \
     --display-name "Python (tribal-soils-geology)"
 
 jupyter lab Notebooks/
 ```
+
+Run notebooks 01 through 09 in order. A skipped public API refresh is reported
+as `not_checked_this_run`; it is never interpreted as zero records. Generated
+files are publication candidates and require review before distribution.
 
 ## Data Sovereignty
 
@@ -169,12 +191,34 @@ Displayed Z coordinates remain the published model elevations. Vertical
 exaggeration changes only the scene aspect ratio, and Tribal outlines are
 identified as a reference plane rather than terrain-draped boundaries.
 
+The 3D model is regional screening context. Resampling does not increase the
+source model's accuracy. Verify horizontal CRS, vertical datum, units, nodata,
+effective resolution, and independent controls before decision use; see
+`docs/scientific_method.md`.
+
 ## Adapting for Another Nation
 
-1. Update `config/config.yaml`:  bounding boxes, SSURGO AREASYMBOL codes
-2. Update `src/constants.py`: Tribal boundary names, centroids
-3. Download SSURGO for your counties
-4. Run the notebooks, everything else updates automatically
+1. Obtain approval from the relevant Nation/organization for governance text,
+   names, geography, inputs, and permitted outputs.
+2. Update `config/config.yaml` and the current Census-name mapping in
+   `src/constants.py`.
+3. Validate SSURGO survey identifiers against SDA; do not infer them from county
+   codes.
+4. Acquire and checksum source data, run `python -m scripts.check_release`, then
+   run tests and notebooks in order.
+
+Adaptation is not fully automatic: scientific assumptions, jurisdictional
+geography, source fitness, governance, citations, and publication rules require
+local review.
+
+## Reproducibility, citation, and contribution
+
+- `CITATION.cff`: preferred software citation metadata.
+- `THIRD_PARTY_DATA.md`: rights and attribution boundaries.
+- `docs/data_intake_guide.md`: acquisition metadata and governed intake.
+- `docs/scientific_method.md`: validation and evidence requirements.
+- `CONTRIBUTING.md`: review and testing expectations.
+- `CHANGELOG.md`: release history.
 
 ## Connections to Related Repositories
 

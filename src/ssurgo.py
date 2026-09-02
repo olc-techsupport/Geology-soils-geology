@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from io import BytesIO
 from typing import Iterable
+import re
 
 import geopandas as gpd
 import numpy as np
@@ -12,6 +13,16 @@ import requests
 
 SDA_TABULAR_URL = "https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest"
 SDA_SPATIAL_URL = "https://sdmdataaccess.sc.egov.usda.gov/Spatial/SDMWGS84Geographic.wfs"
+AREASYMBOL_PATTERN = re.compile(r"^[A-Z]{2}[0-9A-Z]{3}$")
+
+
+def validate_areasymbols(areasymbols: Iterable[str]) -> list[str]:
+    """Normalize and validate identifiers before including them in SDA SQL/WFS."""
+    symbols = sorted({str(symbol).strip().upper() for symbol in areasymbols})
+    invalid = [symbol for symbol in symbols if not AREASYMBOL_PATTERN.fullmatch(symbol)]
+    if invalid:
+        raise ValueError(f"Invalid SSURGO AREASYMBOL value(s): {invalid}")
+    return symbols
 
 
 class SDAError(RuntimeError):
@@ -41,7 +52,7 @@ def survey_catalog(areasymbols: Iterable[str] | None = None) -> pd.DataFrame:
     """Return authoritative SDA catalog records, optionally for selected surveys."""
     where = ""
     if areasymbols:
-        symbols = sorted({str(symbol).upper() for symbol in areasymbols})
+        symbols = validate_areasymbols(areasymbols)
         quoted = ",".join(f"'{symbol}'" for symbol in symbols)
         where = f" WHERE areasymbol IN ({quoted})"
     return sda_query(
@@ -52,7 +63,7 @@ def survey_catalog(areasymbols: Iterable[str] | None = None) -> pd.DataFrame:
 
 def survey_status(areasymbols: Iterable[str]) -> pd.DataFrame:
     """Compare requested survey symbols with the current public SDA catalog."""
-    requested = pd.DataFrame({"areasymbol": sorted({s.upper() for s in areasymbols})})
+    requested = pd.DataFrame({"areasymbol": validate_areasymbols(areasymbols)})
     catalog = survey_catalog(requested["areasymbol"])
     status = requested.merge(catalog, on="areasymbol", how="left", indicator=True)
     status["public_sda_status"] = status.pop("_merge").map(
@@ -63,7 +74,7 @@ def survey_status(areasymbols: Iterable[str]) -> pd.DataFrame:
 
 def fetch_mapunit_polygons(areasymbol: str, timeout: int = 300) -> gpd.GeoDataFrame:
     """Fetch public map-unit polygons for one catalog-validated survey area."""
-    symbol = areasymbol.upper()
+    symbol = validate_areasymbols([areasymbol])[0]
     response = requests.get(
         SDA_SPATIAL_URL,
         params={
@@ -100,6 +111,10 @@ def dominant_components(components: pd.DataFrame) -> pd.DataFrame:
     dominant["mapped_component_pct"] = frame.groupby("mukey")["comppct_r"].transform("sum").loc[dominant.index]
     dominant["dominant_component_pct"] = dominant["comppct_r"]
     dominant["non_dominant_pct"] = (100 - dominant["dominant_component_pct"]).clip(lower=0)
+    maximum = frame.groupby("mukey")["comppct_r"].transform("max")
+    ties = frame[frame["comppct_r"].eq(maximum)].groupby("mukey").size()
+    dominant["dominant_component_tie"] = dominant["mukey"].map(ties).fillna(0).gt(1)
+    dominant["unmapped_component_pct"] = (100 - dominant["mapped_component_pct"]).clip(lower=0)
     return dominant.reset_index(drop=True)
 
 
@@ -121,10 +136,14 @@ def horizon_weighted_properties(
     frame = frame[frame["overlap_cm"] > 0]
     rows = []
     for cokey, group in frame.groupby("cokey"):
-        row = {"cokey": cokey, "covered_depth_cm": group["overlap_cm"].sum()}
+        requested_depth = bottom_cm - top_cm
+        row = {"cokey": cokey, "covered_depth_cm": group["overlap_cm"].sum(),
+               "requested_depth_cm": requested_depth}
         for prop in properties:
             values = pd.to_numeric(group.get(prop), errors="coerce")
             valid = values.notna()
+            property_depth = group.loc[valid, "overlap_cm"].sum()
             row[prop] = np.average(values[valid], weights=group.loc[valid, "overlap_cm"]) if valid.any() else np.nan
+            row[f"{prop}_coverage_fraction"] = property_depth / requested_depth if requested_depth > 0 else np.nan
         rows.append(row)
     return pd.DataFrame(rows)

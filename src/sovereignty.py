@@ -96,8 +96,8 @@ _DATA_SOURCES: dict[str, dict] = {
         "steward":  "US Geological Survey",
         "license":  "Public domain",
         "note":     (
-            "USGS monitoring well density on Tribal lands is systematically "
-            "sparse. Well log coverage gaps are a federal infrastructure gap."
+            "A monitoring-gap conclusion requires a timestamped spatial query, "
+            "an approved comparison geography, and documented evidence."
         ),
     },
 
@@ -121,11 +121,11 @@ _DATA_SOURCES: dict[str, dict] = {
             "and/or Sicangu Lakota natural resource departments. "
             "Governed by OCAP®: Tribal Nations retain ownership and control."
         ),
-        "url":      "data/raw/ (local only, never committed to version control)",
+        "url":      "data/governed/ (local only, denied by Git)",
         "steward":  "Tribal Nation natural resource department",
         "license":  "Tribal: governed by OCAP®",
         "note":     (
-            "This data is GITIGNORED and stays under Tribal control. "
+            "This data is denied by Git and stays in governed local storage. "
             "It is never uploaded to GitHub or shared without explicit "
             "Tribal authorization. See docs/data_sovereignty.md."
         ),
@@ -138,12 +138,13 @@ _DATA_SOURCES: dict[str, dict] = {
             "and/or Sicangu Lakota natural resource departments. "
             "Governed by OCAP®: Tribal Nations retain ownership and control."
         ),
-        "url":      "data/raw/ (local only: never committed to version control)",
+        "url":      "data/governed/ (local only, denied by Git)",
         "steward":  "Tribal Nation natural resource department",
         "license":  "Tribal: governed by OCAP®",
         "note":     (
             "Tribal-collected well logs fill the USGS monitoring gap on "
-            "reservation lands. This data is GITIGNORED."
+            "reservation lands when collection and use are authorized. "
+            "This data is denied by Git."
         ),
     },
 }
