@@ -1,5 +1,6 @@
-"""Normalize notebook cell IDs and remove machine-specific execution state."""
 from __future__ import annotations
+
+"""Normalize notebook cell IDs and remove machine-specific execution state."""
 
 from pathlib import Path
 import nbformat

@@ -32,7 +32,7 @@ pine_ridge = primary[primary["NAME"] == "Pine Ridge"]
 
 def build_05():
     cells = [
-        nbf.v4.new_markdown_cell('''# 05 — Public Soils Availability and Coverage
+        nbf.v4.new_markdown_cell('''# 05 Public Soils Availability and Coverage
 
 This notebook audits public soil-data availability. It does **not** assume that Oglala Lakota soils are available, and it does not use adjacent-county soils as a substitute. A missing catalog record documents public availability status only; it does not establish why data are absent.'''),
         nbf.v4.new_code_cell(setup),

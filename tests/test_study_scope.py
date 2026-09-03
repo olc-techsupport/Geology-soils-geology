@@ -21,7 +21,7 @@ def test_config_has_one_study_extent():
 
 def test_repository_has_no_out_of_scope_reservation_names():
     prohibited = ("rose" + "bud", "sican" + "gu", "oce" + "ti")
-    roots = [ROOT / "README.md", ROOT / "config", ROOT / "docs", ROOT / "src", ROOT / "scripts", ROOT / "Notebooks"]
+    roots = [ROOT/"README.md", ROOT/"config", ROOT/"docs", ROOT/"src", ROOT/"scripts", ROOT/"Notebooks"]
     checked_suffixes = {".md", ".py", ".yaml", ".yml", ".ipynb", ".cff"}
     findings = []
     for root in roots:

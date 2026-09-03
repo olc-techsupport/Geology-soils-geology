@@ -233,7 +233,7 @@ AQUIFER_UNITS = {
     "Madison Group": "Deep confined carbonate aquifer system",
 }
 
-print("AQUIFER UNIT STATUS — USGS 3D MODEL")
+print("AQUIFER UNIT STATUS USGS 3D MODEL")
 for unit, description in AQUIFER_UNITS.items():
     layer = resolve_wsd_horizon_layer(unit)
     ds = load_wsd_horizon_raster(unit)

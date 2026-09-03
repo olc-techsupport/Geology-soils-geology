@@ -1,5 +1,7 @@
-"""Evidence boundaries and governance checks for soils analyses."""
 from __future__ import annotations
+
+"""Evidence boundaries and governance checks for soils analyses."""
+
 from dataclasses import dataclass
 from pathlib import Path
 import geopandas as gpd

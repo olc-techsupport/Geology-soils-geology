@@ -1,5 +1,6 @@
-"""Machine-readable provenance sidecars for generated artifacts."""
 from __future__ import annotations
+
+"""Machine-readable provenance sidecars for generated artifacts."""
 
 import json
 import subprocess

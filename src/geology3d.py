@@ -1,5 +1,6 @@
-"""Scientifically ordered rendering and cross-sections for Spangler (2024)."""
 from __future__ import annotations
+
+"""Scientifically ordered rendering and cross-sections for Spangler (2024)."""
 
 from pathlib import Path
 import geopandas as gpd
@@ -142,8 +143,8 @@ def build_interactive_model(
     figure.update_layout(
         title="USGS Western South Dakota 3D Model — 24 ordered horizons + cross-cutting intrusive surface",
         scene={"aspectmode": "manual", "aspectratio": aspect,
-               "xaxis_title": "Easting (m, NAD83 / CONUS Albers)",
-               "yaxis_title": "Northing (m, NAD83 / CONUS Albers)",
+               "xaxis_title": "Easting (m, NAD83/CONUS Albers)",
+               "yaxis_title": "Northing (m, NAD83/CONUS Albers)",
                "zaxis_title": "Modeled top elevation (m NAVD88)"},
         legend={"itemsizing": "constant"}, margin={"l": 0, "r": 0, "t": 55, "b": 0},
     )

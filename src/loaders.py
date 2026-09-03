@@ -77,7 +77,7 @@ def load_tribal_boundaries(
     if nation_names is None:
         nation_names = ["Pine Ridge"]
 
-    cache_path = CACHE_DIR / "tl_2023_us_aiannh.geojson"
+    cache_path = CACHE_DIR/"tl_2023_us_aiannh.geojson"
 
     if not cache_path.exists() or force_refresh:
         log.info("Downloading Census TIGER AIANNH boundaries...")
@@ -621,7 +621,7 @@ def load_state_geology(bbox=None):
         gdf = gdf.to_crs("EPSG:4326")
 
     # Join unit descriptions from SD_units.csv
-    units_csv = GEOLOGY_DIR / "SD_units.csv"
+    units_csv = GEOLOGY_DIR/"SD_units.csv"
     if units_csv.exists():
         units = pd.read_csv(units_csv, dtype=str)
         # Normalize join key to uppercase to match shapefile

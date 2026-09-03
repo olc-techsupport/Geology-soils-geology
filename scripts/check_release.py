@@ -43,8 +43,8 @@ def verify() -> dict:
     )
     model_path = Path(WSD_3D_MODEL["gdb_path"])
     geology_files = [
-        REPO_ROOT / "data/raw/geology/SD_geol_poly.shp",
-        REPO_ROOT / "data/raw/geology/SD_units.csv",
+        REPO_ROOT/"data/raw/geology/SD_geol_poly.shp",
+        REPO_ROOT/"data/raw/geology/SD_units.csv",
     ]
     return {
         "release_status": "blocked" if sensitive_tracked else "technical-controls-pass",
