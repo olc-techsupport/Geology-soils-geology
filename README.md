@@ -228,3 +228,6 @@ local review.
 - **tribal_agricultural_science** Soils data from this series feeds
   land capability and erosion analysis in the agriculture series
 
+## Project copyright
+
+Copyright (c) 2026 Daear Consulting, LLC. See [COPYRIGHT](COPYRIGHT) and [LICENSE](LICENSE).
